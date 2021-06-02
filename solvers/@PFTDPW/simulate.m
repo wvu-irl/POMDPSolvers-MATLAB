@@ -1,0 +1,60 @@
+function [] = simulate(obj, v_b, d)
+
+%terminate if depth exceeded
+if(d==0)
+    %TODO(jared): assign reward for depth exceeded
+    total=0;
+    return;
+end
+
+%user-defined terminal conditions
+%NOTE(jared): necessary for terminating simulation before depth is 
+%             exceeded and assigning reward for such scenarios
+if(~isempty(obj.is_terminal_))
+    is_term = obj.is_terminal_(v.b);
+    if(is_term)
+        %TODO(jared): assign reward for terminal condition
+        total=0;
+        return;
+    end
+else
+    if(d>1e9)
+        error('Error! Must define finite depth if terminal condition is not defined!');
+    end
+end
+
+%expand action (adds vertex to tree or selects vertex from tree)
+%NOTE(jared): action index is simply integer representing the ith child
+%             of the jth vertex in the tree. For example, consider
+%             a_idx = obj.T_(j).c(i), then obj.T_(a_idx) is the ith child
+%             of obj.T_(j).
+a_idx = obj.actionProgWiden(v_b);
+v_ba = obj.T_(a_idx);
+
+%expand observation (adds vertex to tree or selects vertex from tree)
+%NOTE(jared): observation index works similar as the action vertex where
+%             the index is an integer representing the ith child of the
+%             jth vertex n the tree.
+o_idx = obj.obsProgWiden(v_ba);
+v_bao = obj.T_(o_idx);
+
+%rollout/simulate
+if(isempty(v_bao.c))
+    total = v_bao.r + obj.gamma_*obj.rollout(v_bao.b, d-1);
+else
+    total = v_bao.r + obj.gamma_*obj.simulate(v_bao, d-1);
+end
+
+%increment visitation counter
+obj.T_(v_b.i).n = obj.T_(v_b.i).n + 1;
+obj.T_(v_ba.i).n = obj.T_(v_ba.i).n + 1;
+
+%update state-action value
+tempQ = obj.T_(v_ba.i).q;
+tempN = obj.T_(v_ba.i).n;
+obj.T_(v_ba.i).q = tempQ + (total - tempQ)/tempN;
+
+return;
+
+end
+
