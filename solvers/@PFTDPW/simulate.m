@@ -1,4 +1,4 @@
-function [] = simulate(obj, v_b, d)
+function [total] = simulate(obj, v_b, d)
 
 %terminate if depth exceeded
 if(d==0)
@@ -29,19 +29,31 @@ end
 %             a_idx = obj.T_(j).c(i), then obj.T_(a_idx) is the ith child
 %             of obj.T_(j).
 a_idx = obj.actionProgWiden(v_b);
+if(obj.debug_)
+    disp(['simulate: a_idx = ', num2str(a_idx)]);
+end
 v_ba = obj.T_(a_idx);
 
 %expand observation (adds vertex to tree or selects vertex from tree)
 %NOTE(jared): observation index works similar as the action vertex where
 %             the index is an integer representing the ith child of the
 %             jth vertex n the tree.
-o_idx = obj.obsProgWiden(v_ba);
+[o_idx, do_rollout] = obj.obsProgWiden(v_ba);
+if(obj.debug_)
+    disp(['simulate: o_idx = ', num2str(o_idx)]);
+end
 v_bao = obj.T_(o_idx);
 
 %rollout/simulate
-if(isempty(v_bao.c))
+if(do_rollout)
+    if(obj.debug_)
+        disp('simulate: running rollout');
+    end
     total = v_bao.r + obj.gamma_*obj.rollout(v_bao.b, d-1);
 else
+    if(obj.debug_)
+        disp('simulate: running simulate');
+    end
     total = v_bao.r + obj.gamma_*obj.simulate(v_bao, d-1);
 end
 
@@ -53,8 +65,6 @@ obj.T_(v_ba.i).n = obj.T_(v_ba.i).n + 1;
 tempQ = obj.T_(v_ba.i).q;
 tempN = obj.T_(v_ba.i).n;
 obj.T_(v_ba.i).q = tempQ + (total - tempQ)/tempN;
-
-return;
 
 end
 

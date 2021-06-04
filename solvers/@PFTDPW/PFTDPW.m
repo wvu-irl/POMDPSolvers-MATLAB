@@ -1,6 +1,7 @@
 classdef PFTDPW < POMDPSolver
     properties
         T_=[];
+        debug_=false;
         
         %% user-defined parameters (REQUIRED)
         %number of iterations of tree search
@@ -36,6 +37,7 @@ classdef PFTDPW < POMDPSolver
         % Constructor
         function obj = PFTDPW(pomdp, params)    
             obj@POMDPSolver(pomdp);
+            obj.debug_ = params.debug;
             obj.iterations_ = params.iterations;
             obj.depth_max_ = params.depth_max;
             
