@@ -1,9 +1,8 @@
-function [a_max] = actionProgWiden(obj, v_b)
+function [a_max] = actionProgWiden(obj, s, v_b)
 %NOTE(jared): The belief stored in the vertices after applying an action
 %             is equivalent to the belief in the vertices before applying
 %             an action. The belief is updated in the following vertex
 %             when the observation is acquired.
-
 n_added=0; %only for debugging
 if(obj.pomdp_.is_act_cont_)
     error('Error! Note tested  on continuous actions yet! Comment this line to run.');
@@ -19,11 +18,13 @@ if(obj.pomdp_.is_act_cont_)
         %add vertex to tree
         vnew.i = length(obj.T_) + 1;
         vnew.p = v_b.i;
-        vnew.b = v_b.b;
-        vnew.r = v_b.r;
+        vnew.b = [];
+        vnew.r = [];
         vnew.c = [];
         vnew.n = 0;
+        vnew.m = 0;
         vnew.a = a;
+        vnew.o = [];
         vnew.q = 0;
         obj.T_ = [obj.T_ vnew];
 
@@ -37,18 +38,19 @@ else
     if(isempty(v_b.c))
         A = obj.pomdp_.get_all_actions_bmdp();
         
-        
         for i=1:length(A)
             a = A(:,i);
             
             %add vertex to tree
             vnew.i = length(obj.T_) + 1;
             vnew.p = v_b.i;
-            vnew.b = v_b.b;
-            vnew.r = v_b.r;
+            vnew.b = [];
+            vnew.r = [];
             vnew.c = [];
             vnew.n = 0;
+            vnew.m = 0;
             vnew.a = a;
+            vnew.o = [];
             vnew.q = 0;
             obj.T_ = [obj.T_ vnew];
 

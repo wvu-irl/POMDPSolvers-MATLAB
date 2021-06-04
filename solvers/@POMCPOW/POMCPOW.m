@@ -1,8 +1,4 @@
-%NOTE(jared): requires the following to be defined in the input POMDP
-% -> gen_bmdp
-% -> get_all_actions_bmdp
-% -> rollout_policy
-classdef PFTDPW < POMDPSolver
+classdef POMCPOW < POMDPSolver
     properties
         T_=[];
         debug_=false;

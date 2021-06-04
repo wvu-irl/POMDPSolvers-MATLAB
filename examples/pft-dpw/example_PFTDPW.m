@@ -1,9 +1,9 @@
 clear all; close all;
 clc;
-rng(9) %if seed is 9, the example trajectory is reproduced in the paper
+rng(0) %if seed is 9, the example trajectory is reproduced in the paper
 %% intialize
 s = -3;
-b.s = -10:10;
+b.s = -30:30;
 b.w = 1/length(b.s)*ones(1,length(b.s));
 
 %% pomdp
@@ -45,6 +45,7 @@ disp(['step 1',...
 % pause;
   
 iter=1;
+total_reward=0;
 while 1
     a = pftdpw.plan(b);
     [b, s, o, r] = pomdp.gen_bmdp_sim(b, a, s);
@@ -54,6 +55,8 @@ while 1
     data(iter+1).s = s;
     data(iter+1).o = o;
     data(iter+1).r = r;
+    
+    total_reward = total_reward + r;
     
     disp(['step ',num2str(iter+1),...
           ': s=' ,num2str(data(iter).s),...
@@ -74,6 +77,8 @@ while 1
     
     iter=iter+1;
 end
+
+disp(['total reward: ', num2str(total_reward)]);
 
 %% plot 
 disp('Plotting...');
