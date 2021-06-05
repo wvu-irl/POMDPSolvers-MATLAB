@@ -24,13 +24,13 @@ else
 end
 
 %user-defined heuristic
-a = obj.pomdp_.rollout_policy(b);
+a = obj.pomdp_.rollout_policy_b(b);
 
 %propagate belief
-[b,r] = obj.pomdp_.gen_bmdp(b, a);
+[bp,r] = obj.pomdp_.gen_br_pf(b, a);
 
 %total reward
-total = r + obj.gamma_*obj.rollout(b, d-1);
+total = r + obj.gamma_*obj.rollout(bp, d-1);
 
 end
 

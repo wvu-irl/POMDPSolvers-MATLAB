@@ -1,4 +1,4 @@
-function [a] = rollout_policy(obj, b)
+function [a] = rollout_policy_b(obj, b)
 
 %weighted mean of particles
 s = b.s;
@@ -19,4 +19,3 @@ else
 end
 
 end
-

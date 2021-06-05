@@ -1,6 +1,6 @@
 clear all; close all;
 clc;
-rng(9) %if seed is 9, the example trajectory is reproduced in the paper
+rng(0) %if seed is 0, the example trajectory is reproduced in the paper
 %% intialize
 s = -3;
 b.s = -30:30;
@@ -42,13 +42,13 @@ disp(['step 1',...
 % clf;
 % pomdp.plot_data(data);
 % fn_format_fig();
-% pause;
+% pause(0.001);
   
 iter=1;
 total_reward=0;
 while 1
     a = pftdpw.plan(b);
-    [b, s, o, r] = pomdp.gen_bmdp_sim(b, a, s);
+    [b, s, o, r] = pomdp.gen_br_pf_with_truth(b, a, s);
     
     data(iter+1).b = b;
     data(iter+1).a = a;
@@ -73,7 +73,7 @@ while 1
 %     clf;
 %     pomdp.plot_data(data);
 %     fn_format_fig();
-%     pause;
+%     pause(0.001);
     
     iter=iter+1;
 end

@@ -1,4 +1,4 @@
-function [r] = gen_r(s, a, sp)
+function [r] = gen_r(obj, s, a, sp)
 
 if(a==0)
     if(s==0)

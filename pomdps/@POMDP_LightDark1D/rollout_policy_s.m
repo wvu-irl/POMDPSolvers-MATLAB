@@ -1,4 +1,4 @@
-function [a] = rollout_policy_pomdp(obj, s)
+function [a] = rollout_policy_s(obj, s)
 
 %heuristic for action selection
 if(s==obj.ll_)
@@ -10,4 +10,3 @@ else
 end
 
 end
-

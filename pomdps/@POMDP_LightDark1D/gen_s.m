@@ -1,4 +1,4 @@
-function [s] = gen_s(s,a)
+function [s] = gen_s(obj, s, a)
 
 s = s + a;
 
