@@ -17,6 +17,12 @@ classdef POMDP < handle
     %% Private
     %NOTE(jared): must define the below methods used in the solver
     methods (Abstract)
+        s = gen_s(obj,s,a);
+        o = gen_o(obj,s,a,sp);
+        r = gen_r(obj,s,a,sp);
+        
+        p =  query_observation_likelihood(obj,s,a,sp);
+        
         %methods for belief mdp
 %         a = next_action_bmdp(b);
 %         A = get_all_actions_bmdp(b);

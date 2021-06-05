@@ -16,14 +16,14 @@ pomdp = POMDP_LightDark1D(pomdp_params);
 solver_params.iterations=1000;
 solver_params.depth_max=20;
 solver_params.gamma=0.95;
-solver_params.c=100;
+solver_params.c=90;
 solver_params.k_a = [];
 solver_params.alpha_a = [];
-solver_params.k_o = 4.0;
-solver_params.alpha_o = 1.0/10.0;
+solver_params.k_o = 5.0;
+solver_params.alpha_o = 1.0/15.0;
 solver_params.debug = false;
 
-pftdpw = PFTDPW(pomdp, solver_params);
+pomcpow = POMCPOW(pomdp, solver_params);
 
 %% plan
 data(1).b=b;
@@ -38,16 +38,16 @@ disp(['step 1',...
       ', o='  ,num2str(data(1).o),...
       ', r='  ,num2str(data(1).r)]);
   
-% figure(1);
-% clf;
-% pomdp.plot_data(data);
-% fn_format_fig();
-% pause;
+figure(1);
+clf;
+pomdp.plot_data(data);
+fn_format_fig();
+pause;
   
 iter=1;
 total_reward=0;
 while 1
-    a = pftdpw.plan(b);
+    a = pomcpow.plan(b);
     [b, s, o, r] = pomdp.gen_bmdp_sim(b, a, s);
     
     data(iter+1).b = b;
@@ -69,11 +69,11 @@ while 1
         break;
     end
     
-%     figure(1);
-%     clf;
-%     pomdp.plot_data(data);
-%     fn_format_fig();
-%     pause;
+    figure(1);
+    clf;
+    pomdp.plot_data(data);
+    fn_format_fig();
+    pause;
     
     iter=iter+1;
 end
@@ -81,8 +81,8 @@ end
 disp(['total reward: ', num2str(total_reward)]);
 
 %% plot 
-disp('Plotting...');
-figure(1);
-pomdp.plot_data(data);
-fn_format_fig();
+% disp('Plotting...');
+% figure(1);
+% pomdp.plot_data(data);
+% fn_format_fig();
 

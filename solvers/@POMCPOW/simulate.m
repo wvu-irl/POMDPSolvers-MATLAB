@@ -39,33 +39,35 @@ v_ba = obj.T_(a_idx);
 %NOTE(jared): observation index works similar as the action vertex where
 %             the index is an integer representing the ith child of the
 %             jth vertex n the tree.
-[o_idx, do_rollout] = obj.obsProgWiden(v_ba);
+[o_idx, do_rollout] = obj.obsProgWiden(s, v_ba);
 if(obj.debug_)
     disp(['simulate: o_idx = ', num2str(o_idx)]);
 end
 v_bao = obj.T_(o_idx);
 
 %rollout/simulate
-% if(do_rollout)
-%     if(obj.debug_)
-%         disp('simulate: running rollout');
-%     end
-%     total = v_bao.r + obj.gamma_*obj.rollout(v_bao.b, d-1);
-% else
-%     if(obj.debug_)
-%         disp('simulate: running simulate');
-%     end
-%     total = v_bao.r + obj.gamma_*obj.simulate(v_bao, d-1);
-% end
+if(do_rollout)
+    if(obj.debug_)
+        disp('simulate: running rollout');
+    end
+    total = v_bao.r + obj.gamma_*obj.rollout(s, d-1);
+else
+    if(obj.debug_)
+        disp('simulate: running simulate');
+    end
+    sp = obj.sample(v_bao.b);
+    r = obj.pomdp_.reward(s,v_ba.a,sp);
+    total = r + obj.gamma_*obj.simulate(sp, v_bao, d-1);
+end
 
 %increment visitation counter
-% obj.T_(v_b.i).n = obj.T_(v_b.i).n + 1;
-% obj.T_(v_ba.i).n = obj.T_(v_ba.i).n + 1;
+obj.T_(v_b.i).n = obj.T_(v_b.i).n + 1;
+obj.T_(v_ba.i).n = obj.T_(v_ba.i).n + 1;
 
 %update state-action value
-% tempQ = obj.T_(v_ba.i).q;
-% tempN = obj.T_(v_ba.i).n;
-% obj.T_(v_ba.i).q = tempQ + (total - tempQ)/tempN;
+tempQ = obj.T_(v_ba.i).q;
+tempN = obj.T_(v_ba.i).n;
+obj.T_(v_ba.i).q = tempQ + (total - tempQ)/tempN;
 
 end
 

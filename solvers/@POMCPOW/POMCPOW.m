@@ -35,7 +35,7 @@ classdef POMCPOW < POMDPSolver
      %% Public
     methods (Access = public)
         % Constructor
-        function obj = PFTDPW(pomdp, params)    
+        function obj = POMCPOW(pomdp, params)    
             obj@POMDPSolver(pomdp);
             obj.debug_ = params.debug;
             obj.iterations_ = params.iterations;

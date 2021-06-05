@@ -18,7 +18,8 @@ if(obj.pomdp_.is_obs_cont_)
         %add vertex to tree
         vnew.i = length(obj.T_) + 1;
         vnew.p = v_ba.i;
-        vnew.b = [];
+        vnew.b.s = [];
+        vnew.b.w = [];
         vnew.r = r;
         vnew.c = [];
         vnew.n = 0;
@@ -65,7 +66,8 @@ else
             %add vertex to tree
             vnew.i = length(obj.T_) + 1;
             vnew.p = v_ba.i;
-            vnew.b = [];
+            vnew.b.s = [];
+            vnew.b.w = [];
             vnew.r = r;
             vnew.c = [];
             vnew.n = 0;
@@ -100,7 +102,7 @@ end
 obj.T_(idx).b.s = [obj.T_(idx).b.s, sp];
 
 %assign weight to particle
-w = obj.pomdp_.query_observation_likelihood(sp);
+w = obj.pomdp_.query_observation_likelihood(sp, obj.T_(idx).o);
 obj.T_(idx).b.w = [obj.T_(idx).b.w, w];
 
 end

@@ -1,4 +1,4 @@
-function [a_max] = actionProgWiden(obj, s, v_b)
+function [a_max] = actionProgWiden(obj, v_b)
 %NOTE(jared): The belief stored in the vertices after applying an action
 %             is equivalent to the belief in the vertices before applying
 %             an action. The belief is updated in the following vertex
