@@ -10,11 +10,17 @@ end
 %user-defined terminal conditions
 %NOTE(jared): necessary for terminating simulation before depth is 
 %             exceeded and assigning reward for such scenarios
-is_term = obj.pomdp_.is_terminal(s);
-if(is_term)
-    %TODO(jared): assign reward for terminal condition
-    total=0;
-    return;
+if(~isempty(obj.is_terminal_))
+    is_term = obj.is_terminal_(s);
+    if(is_term)
+        %TODO(jared): assign reward for terminal condition
+        total=0;
+        return;
+    end
+else
+    if(d>1e9)
+        error('Error! Must define finite depth if terminal condition is not defined!');
+    end
 end
 
 %expand action (adds vertex to tree or selects vertex from tree)
@@ -33,18 +39,18 @@ v_ba = obj.T_(a_idx);
 %NOTE(jared): observation index works similar as the action vertex where
 %             the index is an integer representing the ith child of the
 %             jth vertex n the tree.
-[o_idx, do_rollout] = obj.obsProgWiden(s, v_ba);
+[xi_idx, do_rollout] = obj.obsPart(s, v_ba);
 if(obj.debug_)
-    disp(['simulate: o_idx = ', num2str(o_idx)]);
+    disp(['simulate: xi_idx = ', num2str(xi_idx)]);
 end
-v_bao = obj.T_(o_idx);
+v_bao = obj.T_(xi_idx);
 
 %rollout/simulate
 if(do_rollout)
     if(obj.debug_)
         disp('simulate: running rollout');
     end
-    total = v_bao.r + obj.gamma_*obj.rollout(s, v_bao.b, d-1);
+    total = v_bao.r + obj.gamma_*obj.rollout(s, d-1);
 else
     if(obj.debug_)
         disp('simulate: running simulate');

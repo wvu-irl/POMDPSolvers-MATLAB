@@ -7,9 +7,9 @@ mu=0;
 for i=1:length(w)
     mu = mu + w(i)*s(i);
 end
-mu = floor(mu/sum(w));
+mu = round(mu/sum(w));
 
-%heuristic for action selection
+%heuristic for action selection (as in sunberg paper)
 if(mu==obj.ll_)
     a = -1*sign(obj.ll_);
 elseif(abs(mu-obj.ll_) >= 10)
@@ -17,5 +17,12 @@ elseif(abs(mu-obj.ll_) >= 10)
 else
     a = -sign(mu-obj.ll_);
 end
+
+%heuristic for action selection (modified)
+% if(mu==obj.ll_)
+%     a = -1*sign(obj.ll_);
+% else
+%     a = -sign(mu-obj.ll_);
+% end
 
 end

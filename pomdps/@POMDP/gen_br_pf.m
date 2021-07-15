@@ -35,6 +35,10 @@ else
     wp = wp_norm;
 end
 
+if(sum(wp) < 1 - 1e-6)
+    error('gen_br_pf: Weights are not normalized!');
+end
+
 bp.s = sp;
 bp.w = wp;
 

@@ -16,8 +16,22 @@ if(obj.pomdp_.is_obs_cont_)
         %             observation, and reward. 
         [b, r] = obj.pomdp_.gen_br_pf(v_ba.b, v_ba.a);
 
+        %check if more memory needs allocated for tree
+        if(obj.T_size_ == length(obj.T_))
+            alloc_size = length(obj.T_) + obj.iterations_;
+            obj.T_(alloc_size).i=[];
+            obj.T_(alloc_size).p=[];
+            obj.T_(alloc_size).b=[];
+            obj.T_(alloc_size).r=[];
+            obj.T_(alloc_size).c=[];
+            obj.T_(alloc_size).n=[];
+            obj.T_(alloc_size).a=[];
+            obj.T_(alloc_size).q=[];
+        end
+        
         %add vertex to tree
-        vnew.i = length(obj.T_) + 1;
+        vnew.i = obj.T_size_ + 1;
+%         vnew.i = length(obj.T_) + 1;
         vnew.p = v_ba.i;
         vnew.b = b;
         vnew.r = r;
@@ -25,7 +39,9 @@ if(obj.pomdp_.is_obs_cont_)
         vnew.n = 0;
         vnew.a = [];
         vnew.q = 0;
-        obj.T_ = [obj.T_ vnew];
+        obj.T_(vnew.i) = vnew;
+        obj.T_size_ = obj.T_size_ + 1;
+%         obj.T_ = [obj.T_ vnew];
 
         %add child to parent
         obj.T_(vnew.p).c = [obj.T_(vnew.p).c vnew.i];

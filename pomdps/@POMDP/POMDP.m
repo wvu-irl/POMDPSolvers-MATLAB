@@ -21,6 +21,10 @@ classdef POMDP < handle
         o = gen_o(obj, s, a, sp);
         r = gen_r(obj, s, a, sp);
         
+%         xi = obj.pomdp_.gen_xi(s, v_ba.a, sp);
+%         o = obj.pomdp_.gen_o_given_xi(s, v_ba.a, sp, xi);
+%         p_o_given_s_and_xi =  query_observation_likelihood_given_partition(obj, s, a, sp, xi);        
+
         p_o_given_s =  query_observation_likelihood(obj, s, a, sp);
         
         sp_actual = gen_s_wout_noise(obj, s_actual, a_actual);
@@ -37,6 +41,10 @@ classdef POMDP < handle
 %         a = next_action_pomdp(s);
 %         A = get_all_actions_s(s);
 %         a = rollout_policy_s(s);
+
+        %observation partitioning
+%         Xi = obj.pomdp_.get_all_partitions_s(s);
+%         Xi = obj.pomdp_.get_all_partitions_b(s);
 
         %Not required by solver, but used to simulating the policy
         %for analyzing the policy via simulations

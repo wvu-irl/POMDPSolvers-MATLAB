@@ -16,13 +16,15 @@ classdef POMDP_LightDark1D < POMDP
     properties
         A_=[-10,-1,0,1,10]; %action space
         ll_ = 10; %light location
+        r_ = [];
     end
     
      %% Public
     methods (Access = public)
         % Constructor
-        function obj = POMDP_LightDark1D(params)   
+        function obj = POMDP_LightDark1D(params, radius)   
             obj@POMDP(params);
+            obj.r_ = radius;
         end
     end
 end

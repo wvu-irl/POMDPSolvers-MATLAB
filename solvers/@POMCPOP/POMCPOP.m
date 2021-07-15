@@ -1,8 +1,4 @@
-%NOTE(jared): requires the following to be defined in the input POMDP
-% -> gen_bmdp
-% -> get_all_actions_bmdp
-% -> rollout_policy
-classdef PFTDPW < POMDPSolver
+classdef POMCPOP < POMDPSolver
     properties
         T_=[];
         T_size_=0;
@@ -26,11 +22,6 @@ classdef PFTDPW < POMDPSolver
         k_a_=[];
         alpha_a_=[];
         
-        %% ONLY REQUIRED FOR CONTINUOUS OBSERVATIONS
-        %observation widening parameters
-        k_o_=[];
-        alpha_o_=[];
-        
         %% optional
         %is_terminal_ is a function that takes a belief as input and
         %returns a bool, which identifies if the belief is terminal.
@@ -40,7 +31,7 @@ classdef PFTDPW < POMDPSolver
      %% Public
     methods (Access = public)
         % Constructor
-        function obj = PFTDPW(pomdp, params)    
+        function obj = POMCPOP(pomdp, params)    
             obj@POMDPSolver(pomdp);
             obj.debug_ = params.debug;
             obj.iterations_ = params.iterations;
@@ -49,11 +40,6 @@ classdef PFTDPW < POMDPSolver
             if(pomdp.is_act_cont_)
                 obj.k_a_ = params.k_a;
                 obj.alpha_a_ = params.alpha_a;
-            end
-            
-            if(pomdp.is_obs_cont_)
-                obj.k_o_ = params.k_o;
-                obj.alpha_o_ = params.alpha_o;
             end
             
             obj.gamma_ = params.gamma;

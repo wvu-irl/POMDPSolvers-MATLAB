@@ -1,4 +1,4 @@
-function [bp, sp_actual, o_actual, r_actual] = gen_br_pf_sim(obj, b, a, s_actual)
+function [bp, sp_actual, o_actual, r_actual] = gen_br_pf_with_truth(obj, b, a, s_actual)
 
 %% actual state and observation
 sp_actual = obj.gen_s_wout_noise(s_actual, a);
@@ -36,6 +36,10 @@ if(1/sum(w_k_norm.^2) < n_eff*length(w_k_norm))
 else
     sp = sp;
     wp = w_k_norm;
+end
+
+if(sum(wp) < 1 - 1e-6)
+    error('gen_br_pf_with_truth: Weights are not normalized!');
 end
 
 bp.s = sp;

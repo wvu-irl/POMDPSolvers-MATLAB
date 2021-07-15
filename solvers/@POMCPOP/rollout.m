@@ -1,4 +1,4 @@
-function [total] = rollout(obj, s, b, d)
+function [total] = rollout(obj, s, d)
 
 %terminate if depth exceeded
 if(d==0)
@@ -10,12 +10,18 @@ end
 %user-defined terminal conditions
 %NOTE(jared): necessary for terminating simulation before depth is 
 %             exceeded and assigning reward for such scenarios
-% is_term = obj.pomdp_.is_terminal(s);
-% if(is_term)
-%     %TODO(jared): assign reward for terminal condition
-%     total=0;
-%     return;
-% end
+if(~isempty(obj.is_terminal_))
+    is_term = obj.is_terminal_(s);
+    if(is_term)
+        %TODO(jared): assign reward for terminal condition
+        total=0;
+        return;
+    end
+else
+    if(d>1e9)
+        error('Error! Must define finite depth if terminal condition is not defined!');
+    end
+end
 
 %user-defined heuristic
 a = obj.pomdp_.rollout_policy_s(s);
@@ -29,7 +35,7 @@ sp = obj.pomdp_.gen_s(s, a);
 r = obj.pomdp_.gen_r(s, a, sp);
 
 %total reward
-total = r + obj.gamma_*obj.rollout(sp, [], d-1);
+total = r + obj.gamma_*obj.rollout(sp, d-1);
 % total = r + obj.gamma_*obj.rollout(sp, bp, d-1);
 
 end

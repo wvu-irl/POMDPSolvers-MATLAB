@@ -1,6 +1,7 @@
 classdef POMCPOW < POMDPSolver
     properties
         T_=[];
+        T_size_=0;
         debug_=false;
         
         %% user-defined parameters (REQUIRED)
@@ -25,11 +26,6 @@ classdef POMCPOW < POMDPSolver
         %observation widening parameters
         k_o_=[];
         alpha_o_=[];
-        
-        %% optional
-        %is_terminal_ is a function that takes a belief as input and
-        %returns a bool, which identifies if the belief is terminal.
-        is_terminal_=[];
     end
     
      %% Public

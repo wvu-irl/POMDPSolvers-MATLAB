@@ -1,6 +1,6 @@
 clear all; close all;
 clc;
-rng(9) %if seed is 9, the example trajectory is reproduced in the paper
+seed_rng = rng;%(0) %if seed is 0, the example trajectory is reproduced in the paper
 %% intialize
 s = -3;
 b.s = -30:30;
@@ -13,17 +13,17 @@ pomdp_params.is_obs_cont=true;
 pomdp = POMDP_LightDark1D(pomdp_params);
 
 %% solver
-solver_params.iterations=1000;
-solver_params.depth_max=20;
-solver_params.gamma=0.95;
-solver_params.c=90;
+solver_params.iterations=1000; %1000
+solver_params.depth_max=20; %20
+solver_params.gamma=0.95; %0.95
+solver_params.c=100; %100
 solver_params.k_a = [];
 solver_params.alpha_a = [];
-solver_params.k_o = 5.0;
-solver_params.alpha_o = 1.0/15.0;
+solver_params.k_o = 4.0; %4.0
+solver_params.alpha_o = 1.0/10.0; %1.0/10.0
 solver_params.debug = false;
 
-pomcpow = POMCPOW(pomdp, solver_params);
+pftdpw = PFTDPW(pomdp, solver_params);
 
 %% plan
 data(1).b=b;
@@ -31,24 +31,26 @@ data(1).a=nan;
 data(1).s=s;
 data(1).o=nan;
 data(1).r=0;
-disp(['step 1',...
-      ': s='  ,num2str(nan),...
+disp(['step 1:',...
+      's='  ,num2str(nan),...
       ', a='  ,num2str(data(1).a),...
       ', sp=' ,num2str(data(1).s),...
       ', o='  ,num2str(data(1).o),...
-      ', r='  ,num2str(data(1).r)]);
+      ', r='  ,num2str(data(1).r),...
+      ', q='  ,num2str(nan)]);
   
 figure(1);
 clf;
 pomdp.plot_data(data);
 fn_format_fig();
-pause;
+pause(0.001);
   
 iter=1;
 total_reward=0;
 while 1
-    a = pomcpow.plan(b);
-    [b, s, o, r] = pomdp.gen_bmdp_sim(b, a, s);
+    [a, q] = pftdpw.plan(b);
+    break;
+    [b, s, o, r] = pomdp.gen_br_pf_with_truth(b, a, s);
     
     data(iter+1).b = b;
     data(iter+1).a = a;
@@ -57,14 +59,15 @@ while 1
     data(iter+1).r = r;
     
     total_reward = total_reward + r;
-    
-    disp(['step ',num2str(iter+1),...
-          ': s=' ,num2str(data(iter).s),...
-          ', a=' ,num2str(data(iter+1).a),...
-          ', sp=',num2str(data(iter+1).s),...
-          ', o=' ,num2str(data(iter+1).o),...
-          ', r=' ,num2str(data(iter+1).r)]);
-    
+
+    disp(['step ',num2str(iter+1),':',...
+          's='   ,num2str(data(iter).s)  ,', '...
+          'a='   ,num2str(data(iter+1).a),', '...
+          'sp='  ,num2str(data(iter+1).s),', '...
+          'o='   ,num2str(data(iter+1).o),', '...
+          'r='   ,num2str(data(iter+1).r),', '...
+          'q='   ,num2str(data(iter+1).o)]);
+
     if(a==0)
         break;
     end
@@ -73,7 +76,7 @@ while 1
     clf;
     pomdp.plot_data(data);
     fn_format_fig();
-    pause;
+    pause(0.001);
     
     iter=iter+1;
 end

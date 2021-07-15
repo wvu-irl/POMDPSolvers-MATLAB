@@ -40,8 +40,22 @@ else
         for i=1:length(A)
             a = A(:,i);
             
+           %check if more memory needs allocated for tree
+            if(obj.T_size_ == length(obj.T_))
+                alloc_size = length(obj.T_) + obj.iterations_;
+                obj.T_(alloc_size).i=[];
+                obj.T_(alloc_size).p=[];
+                obj.T_(alloc_size).b=[];
+                obj.T_(alloc_size).r=[];
+                obj.T_(alloc_size).c=[];
+                obj.T_(alloc_size).n=[];
+                obj.T_(alloc_size).a=[];
+                obj.T_(alloc_size).q=[];
+            end
+            
             %add vertex to tree
-            vnew.i = length(obj.T_) + 1;
+            vnew.i = obj.T_size_ + 1;
+%             vnew.i = length(obj.T_) + 1;
             vnew.p = v_b.i;
             vnew.b = v_b.b;
             vnew.r = v_b.r;
@@ -49,7 +63,9 @@ else
             vnew.n = 0;
             vnew.a = a;
             vnew.q = 0;
-            obj.T_ = [obj.T_ vnew];
+            obj.T_(vnew.i) = vnew;
+            obj.T_size_ = obj.T_size_ + 1;
+%             obj.T_ = [obj.T_ vnew];
 
             %add child to parent
             obj.T_(vnew.p).c = [obj.T_(vnew.p).c vnew.i];

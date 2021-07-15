@@ -1,6 +1,6 @@
-function [s] = gen_s(obj, s, a)
+function [sp] = gen_s(obj, s, a)
 
-s = s + a;
+sp = s + a;
 
 end
 
